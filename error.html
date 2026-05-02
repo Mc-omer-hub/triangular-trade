@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站维护中 - 三角贸易</title>
+<link rel="icon" href="icon.ico" type="image/x-icon">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg-dark: #050505;
+  --accent: #9e8c1a;
+  --text-dim: #5a5040;
+  --red: #5a0000;
+}
+
+body {
+  font-family: 'Georgia', 'Times New Roman', 'SimSun', serif;
+  background: var(--bg-dark);
+  color: #b8b0a0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(139,0,0,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(158,140,26,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.container {
+  text-align: center;
+  padding: 48px;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+.icon {
+  font-size: 100px;
+  margin-bottom: 32px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.title {
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 16px;
+  letter-spacing: 4px;
+  text-shadow: 0 0 30px rgba(218,165,32,0.3);
+}
+
+.subtitle {
+  font-size: clamp(16px, 3vw, 24px);
+  color: var(--text-dim);
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+
+.info-box {
+  background: rgba(139,0,0,0.1);
+  border: 1px solid var(--red);
+  border-radius: 12px;
+  padding: 24px 48px;
+  margin-bottom: 32px;
+}
+
+.info-box p {
+  color: var(--red);
+  font-size: 16px;
+  line-height: 1.8;
+  margin: 8px 0;
+}
+
+.contact {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-top: 32px;
+}
+
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: float 8s ease-in-out infinite;
+}
+
+.particle:nth-child(1) { top:20%; left:10%; animation-delay:0s; }
+.particle:nth-child(2) { top:60%; left:85%; animation-delay:2s; }
+.particle:nth-child(3) { top:80%; left:30%; animation-delay:4s; }
+.particle:nth-child(4) { top:40%; left:70%; animation-delay:1s; }
+.particle:nth-child(5) { top:10%; left:50%; animation-delay:3s; }
+.particle:nth-child(6) { top:75%; left:60%; animation-delay:5s; }
+.particle:nth-child(7) { top:30%; left:85%; animation-delay:6s; }
+.particle:nth-child(8) { top:50%; left:15%; animation-delay:7s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
+  25% { transform: translateY(-50px) translateX(25px); opacity: 0.4; }
+  50% { transform: translateY(-25px) translateX(-15px); opacity: 0.3; }
+  75% { transform: translateY(-75px) translateX(40px); opacity: 0.5; }
+}
+
+footer {
+  position: absolute;
+  bottom: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  z-index: 1;
+}
+</style>
+</head>
+<body>
+
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+</div>
+
+<div class="container">
+  <div class="icon">⛔</div>
+  
+  <h1 class="title">网站维护中</h1>
+  
+  <p class="subtitle">
+    对不起，本网站暂时无法访问。<br>
+    我们正在进行必要的维护和更新工作。<br>
+    请稍后再试。
+  </p>
+  
+  <div class="info-box">
+    <p>⚠️ 网站当前已关闭访问</p>
+    <p>请耐心等待维护完成</p>
+  </div>
+  
+  <p class="contact">
+    如有问题，请联系网站管理员
+  </p>
+</div>
+
+<footer>
+  三角贸易 © 2026
+</footer>
+
+</body>
+</html>
