@@ -597,68 +597,359 @@ section {
   margin-top: 4px;
 }
 
-/* 数据统计 */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-  margin: 48px 0;
-}
-
-.stat-card {
-  padding: 32px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(139,69,19,0.1), rgba(139,0,0,0.05));
-  border: 1px solid rgba(218,165,32,0.2);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(218,165,32,0.1), transparent);
-  transition: left 0.5s;
-}
-
-.stat-card:hover::before {
-  left: 100%;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.stat-icon {
-  font-size: 32px;
-  margin-bottom: 16px;
+/* 购买按钮 */
+.btn-buy {
   display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 0;
+  background: linear-gradient(135deg, var(--primary), #7a4010);
+  color: #ffd700;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+  letter-spacing: 1px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-buy:hover {
+  background: linear-gradient(135deg, #7a4010, var(--red));
+  border-color: #ffd700;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(218,165,32,0.25);
 }
 
-.stat-number {
-  font-size: 42px;
-  font-weight: 900;
+/* 购物车悬浮按钮 */
+.cart-float {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 2000;
+  background: var(--primary);
+  border: 2px solid var(--accent);
+  border-radius: 50px;
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  transition: all 0.3s;
+  color: #ffd700;
+  font-size: 14px;
+  font-weight: bold;
+}
+.cart-float:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 40px rgba(218,165,32,0.3);
+  background: #7a4010;
+}
+.cart-float .cart-count {
+  background: var(--red);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-red 2s infinite;
+}
+
+/* ====== 弹窗遮罩 ====== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.open {
+  display: flex;
+}
+
+/* ====== 弹窗主体 ====== */
+.modal-box {
+  background: #0d0d0a;
+  border: 2px solid rgba(218,165,32,0.5);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+  animation: modal-in 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+@keyframes modal-in {
+  from { opacity:0; transform: translateY(40px) scale(0.96); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 20px 28px 16px;
+  border-bottom: 1px dashed rgba(218,165,32,0.25);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 {
+  font-size: 18px;
   color: var(--accent);
+  letter-spacing: 1px;
+}
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+.modal-close:hover { color: var(--red); }
+
+.modal-body {
+  padding: 20px 28px;
+}
+
+/* 购物车商品列表 */
+.cart-list {
+  margin-bottom: 20px;
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(218,165,32,0.12);
+  font-size: 13px;
+  color: #c8c0a8;
+}
+.cart-item-name {
+  flex: 1;
+  color: #ffd700;
+  font-weight: bold;
+}
+.cart-item-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 16px;
+}
+.cart-item-qty button {
+  width: 22px; height: 22px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+.cart-item-qty button:hover {
+  background: var(--accent);
+  color: #000;
+}
+.cart-item-remove {
+  background: none;
+  border: none;
+  color: var(--red);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+  transition: opacity 0.2s;
+}
+.cart-item-remove:hover { opacity: 0.6; }
+
+.cart-total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0 4px;
+  border-top: 2px solid rgba(218,165,32,0.3);
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffd700;
+}
+.cart-total-row span:last-child {
+  font-family: 'Courier New', monospace;
+  color: #cc2222;
+  font-size: 20px;
+}
+
+.cart-empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 32px 0;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* 分割线 */
+.modal-divider {
+  border: none;
+  border-top: 1px dashed rgba(218,165,32,0.2);
+  margin: 20px 0;
+}
+
+/* 表单 */
+.form-title {
+  font-size: 15px;
+  color: var(--accent);
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+.form-row label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+.form-row label .lock-icon {
+  font-size: 11px;
+  margin-left: 4px;
+  color: var(--red);
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(218,165,32,0.25);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #c8c0a8;
+  font-family: 'Georgia', serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: var(--accent);
+}
+.form-row select[disabled],
+.form-row input[readonly] {
+  cursor: not-allowed;
+  opacity: 0.75;
+  border-color: rgba(139,0,0,0.5);
+  background: rgba(139,0,0,0.05);
+  color: #cc4444;
+}
+.form-row select option {
+  background: #111;
+}
+.form-row textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+.form-locked-hint {
+  font-size: 11px;
+  color: var(--red);
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* 提交按钮 */
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #8b0000, #5a0000);
+  color: #ffd700;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+  letter-spacing: 2px;
+  border: 2px solid #cc2222;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-submit:hover {
+  background: linear-gradient(135deg, #aa0000, #7a0000);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139,0,0,0.4);
+}
+.btn-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 下单成功弹窗 */
+.modal-success {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: rgba(0,0,0,0.9);
+  align-items: center;
+  justify-content: center;
+}
+.modal-success.open { display: flex; }
+.success-box {
+  background: #0d0d0a;
+  border: 2px solid #8b0000;
+  border-radius: 12px;
+  padding: 48px 40px;
+  text-align: center;
+  max-width: 420px;
+  animation: modal-in 0.4s ease;
+}
+.success-box .success-icon { font-size: 56px; margin-bottom: 16px; }
+.success-box h3 {
+  color: var(--accent);
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.success-box p {
+  color: #a89878;
+  font-size: 13px;
+  line-height: 1.8;
   margin-bottom: 8px;
+}
+.success-box .success-stamp {
+  font-size: 11px;
+  color: var(--red);
+  border: 1px solid var(--red);
+  padding: 6px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 16px;
   font-family: 'Courier New', monospace;
 }
-
-.stat-label {
-  font-size: 14px;
-  color: var(--text-dim);
-  line-height: 1.5;
+.btn-success-close {
+  margin-top: 24px;
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 10px 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
 }
-
-.stat-card:hover .stat-number {
-  text-shadow: 0 0 20px var(--accent);
+.btn-success-close:hover {
+  background: var(--accent);
+  color: #000;
 }
 
 /* 轮播区域 */
@@ -1213,6 +1504,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('精选非洲劳工', 300)">🛒 加入购物车 — £300</button>
         </div>
       </div>
       
@@ -1225,7 +1517,7 @@ footer .final-warning p {
         </div>
         <div class="product-info">
           <h4 class="product-name">超级大黑奴</h4>
-          <p class="product-desc">全程豪华英式货舱，\"货物\"采用集装箱存放</p>
+          <p class="product-desc">全程豪华英式货舱，"货物"采用集装箱存放</p>
           <div class="product-meta">
             <span>航线：大西洋</span>
             <div class="product-quantity">
@@ -1234,6 +1526,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('超级大黑奴', 350)">🛒 加入购物车 — £350</button>
         </div>
       </div>
       
@@ -1245,7 +1538,7 @@ footer .final-warning p {
           <span class="product-price">£200-400</span>
         </div>
         <div class="product-info">
-          <h4 class="product-name"></h4>赵高黑奴</h4>
+          <h4 class="product-name">赵高黑奴</h4>
           <p class="product-desc">买一送一，力大无穷，可在任何地方工作</p>
           <div class="product-meta">
             <span>产地：非洲</span>
@@ -1255,6 +1548,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('赵高黑奴', 280)">🛒 加入购物车 — £280</button>
         </div>
       </div>
       
@@ -1276,6 +1570,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('精选劳工', 350)">🛒 加入购物车 — £350</button>
         </div>
       </div>
       
@@ -1297,6 +1592,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('终身黑奴商品', 250)">🛒 加入购物车 — £250</button>
         </div>
       </div>
       
@@ -1318,6 +1614,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('高效黑奴', 300)">🛒 加入购物车 — £300</button>
         </div>
       </div>
       
@@ -1339,6 +1636,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('黑奴商品', 280)">🛒 加入购物车 — £280</button>
         </div>
       </div>
       
@@ -1360,6 +1658,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('三角贸易黑奴', 320)">🛒 加入购物车 — £320</button>
         </div>
       </div>
       
@@ -1381,6 +1680,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('黑奴', 260)">🛒 加入购物车 — £260</button>
         </div>
       </div>
       
@@ -1402,6 +1702,7 @@ footer .final-warning p {
               <button class="qty-plus">+</button>
             </div>
           </div>
+          <button class="btn-buy" onclick="addToCart('批发专区（×10）', 2200)">🛒 加入购物车 — £2,200起</button>
         </div>
       </div>
     </div>
@@ -1529,59 +1830,6 @@ footer .final-warning p {
   <!-- 滚动提示 -->
   <div class="scroll-hint-inline">
     <span class="arrow">↓</span>
-    向下滚动查看"殖民者的商业数据"
-  </div>
-</section>
-
-<!-- 触目惊心的数据 -->
-<section id="stats">
-  <h2 class="section-title fade-in">📊 殖民者的"商业数据"</h2>
-  
-  <div class="stats-grid">
-    <div class="stat-card fade-in">
-      <span class="stat-icon">👥</span>
-      <div class="stat-number">1200万人</div>
-      <div class="stat-label">被贩卖到美洲的<br>"黑奴"</div>
-    </div>
-    
-    <div class="stat-card fade-in">
-      <span class="stat-icon">⚓</span>
-      <div class="stat-number">24-240%</div>
-      <div class="stat-label">"中间航线"变成黑珍珠的概率<br>（每一船人里就有2424个黑奴在途中死亡）</div>
-    </div>
-    
-    <div class="stat-card fade-in">
-      <span class="stat-icon">📅</span>
-      <div class="stat-number">400年</div>
-      <div class="stat-label">这桩"商业活动"<br>持续了整个四百年</div>
-    </div>
-    
-    <div class="stat-card fade-in">
-      <span class="stat-icon">💰</span>
-      <div class="stat-number">£200-400</div>
-      <div class="stat-label">一个"黑奴"的"价格"<br>相当于今天的几千元</div>
-    </div>
-    
-    <div class="stat-card fade-in">
-      <span class="stat-icon">💀</span>
-      <div class="stat-number">1000万人</div>
-      <div class="stat-label">直接或间接死亡<br>三角贸易的黑奴</div>
-    </div>
-    
-    <div class="stat-card fade-in">
-      <span class="stat-icon">📈</span>
-      <div class="stat-number">300%</div>
-      <div class="stat-label">投资回报率<br>殖民者的"商业良心"</div>
-    </div>
-  </div>
-  
-  <div class="sarcasm-note fade-in">
-    四百年间，每一笔资本的积累，都浸透着黑奴的奴气。
-  </div>
-    
-  <!-- 滚动提示 -->
-  <div class="scroll-hint-inline">
-    <span class="arrow">↓</span>
     向下滚动查看"历史影像"
   </div>
 </section>
@@ -1628,6 +1876,97 @@ footer .final-warning p {
   </p>
 </footer>
 
+<!-- 购物车悬浮按钮 -->
+<div class="cart-float" onclick="openCartModal()" id="cartFloat" style="display:none;">
+  🛒 查看购物车
+  <span class="cart-count" id="cartCount">0</span>
+</div>
+
+<!-- ====== 下单弹窗 ====== -->
+<div class="modal-overlay" id="cartModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>⚓ 殖民者采购订单</h3>
+      <button class="modal-close" onclick="closeCartModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- 购物车商品列表 -->
+      <div class="cart-list" id="cartList">
+        <div class="cart-empty" id="cartEmpty">购物车为空，请先选购商品</div>
+      </div>
+      <div id="cartTotalRow" class="cart-total-row" style="display:none;">
+        <span>合计</span>
+        <span id="cartTotalPrice">£0</span>
+      </div>
+
+      <hr class="modal-divider">
+
+      <!-- 订单表单 -->
+      <div class="form-title">📋 填写采购信息</div>
+
+      <div class="form-row">
+        <label>买家身份 <span class="lock-icon">🔒 已锁定</span></label>
+        <select id="f-role">
+          <option value="种植园园主">种植园园主（Virginia Plantation Owner）</option>
+          <option value="农场主">农场主（Colonial Farmer）</option>
+          <option value="棉花种植园主">棉花种植园主（Cotton Planter）</option>
+          <option value="糖业庄园主">糖业庄园主（Sugar Estate Owner）</option>
+        </select>
+        <p class="form-locked-hint">⚠ 仅限认证殖民地买家身份，其他身份无购买资格</p>
+      </div>
+
+      <div class="form-row">
+        <label>收货地区 <span class="lock-icon">🔒 已锁定</span></label>
+        <select id="f-region">
+          <option value="英属弗吉尼亚（北美）">英属弗吉尼亚（北美）</option>
+          <option value="法属圣多明各（加勒比）">法属圣多明各（加勒比）</option>
+          <option value="英属牙买加（加勒比）">英属牙买加（加勒比）</option>
+          <option value="葡属巴西（南美）">葡属巴西（南美）</option>
+          <option value="英格兰（欧洲）">英格兰（欧洲）</option>
+          <option value="法兰西（欧洲）">法兰西（欧洲）</option>
+          <option value="荷兰（欧洲）">荷兰（欧洲）</option>
+        </select>
+        <p class="form-locked-hint">⚠ 仅支持发货至欧洲或美洲殖民地，非洲本土不接受退货</p>
+      </div>
+
+      <div class="form-row">
+        <label>庄园/种植园名称</label>
+        <input type="text" id="f-estate" placeholder="例：Monticello 庄园" maxlength="40">
+      </div>
+
+      <div class="form-row">
+        <label>运输方式 <span class="lock-icon">🔒 已锁定</span></label>
+        <input type="text" value="大西洋中间航线（Middle Passage）— 限量舱位，损耗自理" readonly>
+        <p class="form-locked-hint">⚠ 航线唯一，途中损耗约15-20%，殖民公司概不负责</p>
+      </div>
+
+      <div class="form-row">
+        <label>备注（如需特殊规格）</label>
+        <textarea id="f-note" placeholder="例：需要体格强壮的成年男性，擅长棉花采摘…"></textarea>
+      </div>
+
+      <button class="btn-submit" id="submitBtn" onclick="submitOrder()" disabled>
+        ✍ 签署采购协议并下单
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 下单成功弹窗 ====== -->
+<div class="modal-success" id="successModal">
+  <div class="success-box">
+    <div class="success-icon">⚓</div>
+    <h3>采购协议已签署</h3>
+    <p>您的订单已由<strong id="s-role" style="color:#ffd700;"></strong>提交</p>
+    <p>发货地：非洲西海岸 → 目的地：<strong id="s-region" style="color:#ffd700;"></strong></p>
+    <p style="color:#888; font-size:12px; margin-top:12px;">预计抵达时间：3-6个月（取决于风向与"货物"状态）</p>
+    <div class="success-stamp" id="s-stamp">INV-SLAVE-1789 · 已特批</div>
+    <br>
+    <button class="btn-success-close" onclick="closeSuccess()">关闭</button>
+  </div>
+</div>
+
 <script>
 // ============================================================
 // 鼠标交互系统
@@ -1672,20 +2011,12 @@ function createRipple(x, y) {
 
 const interactiveElements = document.querySelectorAll('a, button, .product-card, .stat-card, .carousel-item, .video-card');
 interactiveElements.forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.classList.add('hovering');
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.classList.remove('hovering');
-  });
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hovering'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hovering'); });
 });
 
-document.addEventListener('mouseenter', () => {
-  cursor.style.opacity = '1';
-});
-document.addEventListener('mouseleave', () => {
-  cursor.style.opacity = '0';
-});
+document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
+document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
 
 // ============================================================
 // 粒子背景
@@ -1704,10 +2035,7 @@ if (cvs) {
   window.addEventListener('resize', resizeCanvas);
 
   class Particle {
-    constructor() {
-      this.reset();
-    }
-    
+    constructor() { this.reset(); }
     reset() {
       this.x = Math.random() * cvs.width;
       this.y = Math.random() * cvs.height;
@@ -1717,25 +2045,18 @@ if (cvs) {
       this.opacity = Math.random() * 0.4 + 0.1;
       this.hue = Math.random() > 0.7 ? 0 : 40;
     }
-    
     update() {
       this.x += this.speedX;
       this.y += this.speedY;
-      
-      const dx = mouseX - this.x;
-      const dy = mouseY - this.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const dx = mouseX - this.x, dy = mouseY - this.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
       if (dist < 150) {
         const force = (150 - dist) / 150;
         this.x -= dx * force * 0.02;
         this.y -= dy * force * 0.02;
       }
-      
-      if (this.x < 0 || this.x > cvs.width || this.y < 0 || this.y > cvs.height) {
-        this.reset();
-      }
+      if (this.x < 0 || this.x > cvs.width || this.y < 0 || this.y > cvs.height) this.reset();
     }
-    
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -1744,32 +2065,24 @@ if (cvs) {
     }
   }
 
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push(new Particle());
-  }
+  for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
 
   function animateParticles() {
     ctx.clearRect(0, 0, cvs.width, cvs.height);
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    
+    particles.forEach(p => { p.update(); p.draw(); });
     particles.forEach((p1, i) => {
       particles.slice(i + 1).forEach(p2 => {
-        const dx = p1.x - p2.x;
-        const dy = p1.y - p2.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dx = p1.x - p2.x, dy = p1.y - p2.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist < 100) {
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(158, 140, 26, ${0.05 * (1 - dist / 100)})`;
+          ctx.strokeStyle = `rgba(158,140,26,${0.05*(1-dist/100)})`;
           ctx.stroke();
         }
       });
     });
-    
     requestAnimationFrame(animateParticles);
   }
   animateParticles();
@@ -1778,78 +2091,37 @@ if (cvs) {
 // ============================================================
 // 滚动动画
 // ============================================================
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
 }, observerOptions);
-
-document.querySelectorAll('.fade-in').forEach(el => {
-  observer.observe(el);
-});
-
-const statNumbers = document.querySelectorAll('.stat-number');
-const numberObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      numberObserver.unobserve(entry.target);
-    }
-  });
-}, observerOptions);
-
-statNumbers.forEach(num => numberObserver.observe(num));
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 // ============================================================
-// 商品卡片交互
+// 商品卡片交互（3D倾斜）
 // ============================================================
-const productCards = document.querySelectorAll('.product-card');
-productCards.forEach(card => {
+document.querySelectorAll('.product-card').forEach(card => {
   card.addEventListener('mousemove', (e) => {
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 20;
-    const rotateY = (centerX - x) / 20;
-    
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    const rotateX = (y - rect.height/2) / 20;
+    const rotateY = (rect.width/2 - x) / 20;
     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
   });
-  
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-  
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+
   const minusBtn = card.querySelector('.qty-minus');
-  const plusBtn = card.querySelector('.qty-plus');
-  const qtySpan = card.querySelector('.product-quantity span');
-  
+  const plusBtn  = card.querySelector('.qty-plus');
+  const qtySpan  = card.querySelector('.product-quantity span');
   if (minusBtn && plusBtn && qtySpan) {
     let qty = 1;
-    
-    minusBtn.addEventListener('click', () => {
-      if (qty > 0) {
-        qty--;
-        qtySpan.textContent = qty;
-        card.style.transform = 'scale(0.95)';
-        setTimeout(() => card.style.transform = '', 150);
-      }
+    minusBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (qty > 1) { qty--; qtySpan.textContent = qty; }
     });
-    
-    plusBtn.addEventListener('click', () => {
-      qty++;
-      qtySpan.textContent = qty;
-      card.style.transform = 'scale(1.05)';
-      setTimeout(() => card.style.transform = '', 150);
+    plusBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      qty++; qtySpan.textContent = qty;
     });
   }
 });
@@ -1861,23 +2133,16 @@ const stamp = document.querySelector('.invoice-stamp');
 if (stamp) {
   stamp.addEventListener('click', () => {
     stamp.style.transform = 'rotate(-15deg) scale(1.2)';
-    stamp.style.transition = 'all 0.3s';
-    setTimeout(() => {
-      stamp.style.transform = 'rotate(-15deg) scale(1)';
-    }, 300);
+    setTimeout(() => { stamp.style.transform = 'rotate(-15deg) scale(1)'; }, 300);
   });
 }
 
 // ============================================================
-// 滚动进度指示
+// 滚动进度
 // ============================================================
 window.addEventListener('scroll', () => {
-  const scrollTop = document.documentElement.scrollTop;
-  const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = (scrollTop / scrollHeight) * 100;
-  
   const nav = document.querySelector('nav');
-  if (scrollTop > 100) {
+  if (document.documentElement.scrollTop > 100) {
     nav.style.background = 'rgba(10,10,10,0.95)';
     nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.5)';
   } else {
@@ -1892,34 +2157,22 @@ window.addEventListener('scroll', () => {
 function initVideoControls() {
   ['video1', 'video2'].forEach((id, index) => {
     const video = document.getElementById(id);
+    if (!video) return;
     const playBtn = video.parentElement.querySelector('.play-pause');
-    const progressBar = document.getElementById(`progress${index + 1}`);
-    const timeDisplay = document.getElementById(`time${index + 1}`);
-    const durationDisplay = document.getElementById(`duration${index + 1}`);
-    
-    video.parentElement.querySelector('.video-overlay').addEventListener('click', () => {
-      toggleVideo(id);
-    });
-    
+    const progressBar = document.getElementById(`progress${index+1}`);
+    const timeDisplay = document.getElementById(`time${index+1}`);
+    const durationDisplay = document.getElementById(`duration${index+1}`);
+
+    video.parentElement.querySelector('.video-overlay').addEventListener('click', () => toggleVideo(id));
     video.addEventListener('loadedmetadata', () => {
-      if (durationDisplay) {
-        durationDisplay.textContent = formatTime(video.duration);
-      }
+      if (durationDisplay) durationDisplay.textContent = formatTime(video.duration);
     });
-    
     video.addEventListener('timeupdate', () => {
-      if (progressBar) {
-        progressBar.style.width = (video.currentTime / video.duration) * 100 + '%';
-      }
-      if (timeDisplay) {
-        timeDisplay.textContent = formatTime(video.currentTime);
-      }
+      if (progressBar) progressBar.style.width = (video.currentTime/video.duration)*100 + '%';
+      if (timeDisplay) timeDisplay.textContent = formatTime(video.currentTime);
     });
-    
     video.addEventListener('ended', () => {
-      if (playBtn) {
-        playBtn.textContent = '▶';
-      }
+      if (playBtn) playBtn.textContent = '▶';
       video.parentElement.querySelector('.video-overlay').style.opacity = '1';
     });
   });
@@ -1929,40 +2182,26 @@ function toggleVideo(id) {
   const video = document.getElementById(id);
   const playBtn = video.parentElement.querySelector('.play-pause');
   const overlay = video.parentElement.querySelector('.video-overlay');
-  
   if (video.paused) {
-    video.play();
-    if (playBtn) playBtn.textContent = '⏸';
-    overlay.style.opacity = '0';
+    video.play(); if (playBtn) playBtn.textContent = '⏸'; overlay.style.opacity = '0';
   } else {
-    video.pause();
-    if (playBtn) playBtn.textContent = '▶';
-    overlay.style.opacity = '1';
+    video.pause(); if (playBtn) playBtn.textContent = '▶'; overlay.style.opacity = '1';
   }
 }
 
 function setVolume(event, id) {
   const video = document.getElementById(id);
   const rect = event.target.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const volume = Math.max(0, Math.min(1, x / rect.width));
+  const volume = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
   video.volume = volume;
-  
-  const volumeBar = document.getElementById(`volumeBar${id.slice(-1)}`);
-  if (volumeBar) {
-    volumeBar.style.width = volume * 100 + '%';
-  }
+  const bar = document.getElementById(`volumeBar${id.slice(-1)}`);
+  if (bar) bar.style.width = volume * 100 + '%';
 }
 
 function toggleFullscreen(id) {
-  const video = document.getElementById(id);
-  const player = video.parentElement;
-  
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  } else {
-    player.requestFullscreen();
-  }
+  const player = document.getElementById(id).parentElement;
+  if (document.fullscreenElement) document.exitFullscreen();
+  else player.requestFullscreen();
 }
 
 function formatTime(seconds) {
@@ -1973,6 +2212,144 @@ function formatTime(seconds) {
 }
 
 document.addEventListener('DOMContentLoaded', initVideoControls);
+
+// ============================================================
+// 购物车逻辑
+// ============================================================
+let cart = [];
+
+function addToCart(name, price) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ name, price, qty: 1 });
+  }
+  updateCartUI();
+
+  // 按钮反馈动画
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '✔ 已加入购物车！';
+  btn.style.background = 'linear-gradient(135deg, #005500, #003300)';
+  btn.style.borderColor = '#00aa00';
+  btn.style.color = '#00ff66';
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }, 1200);
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+
+  // 更新悬浮按钮
+  const floatBtn = document.getElementById('cartFloat');
+  const countEl  = document.getElementById('cartCount');
+  floatBtn.style.display = count > 0 ? 'flex' : 'none';
+  countEl.textContent = count;
+
+  // 更新弹窗内容
+  renderCartList();
+
+  // 表单提交按钮：有商品才能提交
+  const submitBtn = document.getElementById('submitBtn');
+  if (submitBtn) submitBtn.disabled = cart.length === 0;
+}
+
+function renderCartList() {
+  const listEl    = document.getElementById('cartList');
+  const emptyEl   = document.getElementById('cartEmpty');
+  const totalRow  = document.getElementById('cartTotalRow');
+  const totalEl   = document.getElementById('cartTotalPrice');
+
+  // 清空旧列表（保留 cartEmpty）
+  Array.from(listEl.children).forEach(child => {
+    if (child.id !== 'cartEmpty') child.remove();
+  });
+
+  if (cart.length === 0) {
+    emptyEl.style.display = 'block';
+    totalRow.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  totalRow.style.display = 'flex';
+
+  cart.forEach((item, idx) => {
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
+      <span class="cart-item-name">${item.name}</span>
+      <div class="cart-item-qty">
+        <button onclick="changeQty(${idx},-1)">−</button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${idx},1)">+</button>
+      </div>
+      <span>£${(item.price * item.qty).toLocaleString()}</span>
+      <button class="cart-item-remove" onclick="removeItem(${idx})" title="移除">✕</button>
+    `;
+    listEl.appendChild(row);
+  });
+
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  totalEl.textContent = '£' + total.toLocaleString();
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateCartUI();
+}
+
+function removeItem(idx) {
+  cart.splice(idx, 1);
+  updateCartUI();
+}
+
+function openCartModal() {
+  renderCartList();
+  document.getElementById('cartModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCartModal() {
+  document.getElementById('cartModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// 点遮罩关闭
+document.getElementById('cartModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCartModal();
+});
+
+function submitOrder() {
+  const role   = document.getElementById('f-role').value;
+  const region = document.getElementById('f-region').value;
+
+  if (cart.length === 0) return;
+
+  // 填充成功弹窗
+  document.getElementById('s-role').textContent = role;
+  document.getElementById('s-region').textContent = region;
+  const orderNo = 'INV-' + Math.random().toString(36).substr(2,6).toUpperCase() + '-1789';
+  document.getElementById('s-stamp').textContent = orderNo + ' · 已特批';
+
+  closeCartModal();
+  document.getElementById('successModal').classList.add('open');
+
+  // 清空购物车
+  cart = [];
+  updateCartUI();
+}
+
+function closeSuccess() {
+  document.getElementById('successModal').classList.remove('open');
+}
 </script>
 
 </body>
